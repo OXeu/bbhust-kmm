@@ -16,7 +16,6 @@ object MarkdownAST {
                     =======
                     `Code here`
                     **强调***斜体*与***着重强调***
-                    
     """.trimIndent()
 
 
