@@ -1,0 +1,689 @@
+# This file was generated based on ".graphqlconfig". Do not edit manually.
+
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+"权限控制"
+directive @auth on OBJECT | FIELD_DEFINITION
+
+"仅用于代码生成时强制单独resolver"
+directive @goField(forceResolver: Boolean) on FIELD_DEFINITION | INPUT_FIELD_DEFINITION
+
+union MessageRefer = Post | Reply
+
+union SearchResult = Post | User
+
+"◆ 账号信息"
+type Account {
+    "是否为校友/已毕业"
+    is_alumni: Boolean!
+    "学号/人事编号"
+    person_id: String!
+    "电话"
+    phone: String!
+}
+
+type AddMobileAppInfoPayload {
+    success: Boolean!
+}
+
+type AddPostPayload {
+    id: ID!
+}
+
+type AddReplyPayload {
+    id: ID!
+}
+
+type AddReportPayload {
+    id: ID!
+}
+
+"帖子分类"
+type Category {
+    "分类讨论数量 (帖子+回复)"
+    argue_count: Int!
+    "描述"
+    desc: String!
+    "热度"
+    hot_value: Int!
+    "分类ID"
+    id: String!
+    "分类名称"
+    name: String!
+    "分类的帖子"
+    posts(limit: Int! = 10, time: DateTime! = 2145888000): PostConnection!
+    "分类阅读数量"
+    read_count: Int!
+}
+
+type ChangePasswordPayload {
+    success: Boolean!
+}
+
+type CheckPersonIDPayload {
+    occupied: Boolean!
+}
+
+type CheckPhonePayload {
+    occupied: Boolean!
+}
+
+type CheckUsernamePayload {
+    occupied: Boolean!
+}
+
+type DeletePostPayload {
+    success: Boolean!
+}
+
+type DeleteReplyPayload {
+    success: Boolean!
+}
+
+type FavoritePostPayload {
+    success: Boolean!
+}
+
+type FollowUserPayload {
+    success: Boolean!
+}
+
+type GetMobileAppUploadTokenPayload {
+    "相对路径"
+    resource_key: String!
+    "上传凭证"
+    token: String!
+    "URL"
+    url: String!
+}
+
+type GetUploadTokenPayload {
+    "图片相对路径"
+    resource_key: String!
+    "上传凭证"
+    token: String!
+    "图片URL"
+    url: String!
+}
+
+type LikePostPayload {
+    success: Boolean!
+}
+
+type LikeReplyPayload {
+    success: Boolean!
+}
+
+type LoginPayload {
+    expire: DateTime!
+    id: ID!
+    permission: Int!
+    token: String!
+}
+
+"消息信息"
+type Message {
+    "内容"
+    content: String!
+    "消息ID"
+    id: ID!
+    "已读"
+    read: Boolean!
+    "来源 LIKE/AT为Post, COMMENT/REPLY/LIKE_REPLY为Reply"
+    refer: MessageRefer
+    "发送者"
+    sender: User
+    "时间"
+    time: DateTime!
+    "标题"
+    title: String!
+    "消息类型"
+    type: MessageType!
+}
+
+type MessageCount {
+    count: Int!
+}
+
+type MobileAppInfo {
+    dex: String!
+    sign: String!
+    update_log: String!
+    url: String!
+    version: String!
+    version_code: Int!
+}
+
+"""
+
+- ◆: 需要用户权限 且只能查/改自己的 未登录返回错误
+- 目前只有注册登录少部分接口允许未登录调用
+"""
+type Mutation {
+    "◆◆ 添加安卓app信息"
+    addMobileAppInfo(input: AddMobileAppInfoInput!): AddMobileAppInfoPayload!
+    "◆ 新建帖子"
+    addPost(input: AddPostInput!): AddPostPayload!
+    "◆ 新建回复"
+    addReply(input: AddReplyInput!): AddReplyPayload!
+    "◆ 新建举报"
+    addReport(input: AddReportInput!): AddReportPayload
+    "修改密码"
+    changePassword(input: ChangePasswordInput!): ChangePasswordPayload!
+    "检查学号/人事编号是否被占用"
+    checkPersonID(input: CheckPersonIDInput!): CheckPersonIDPayload!
+    "检查手机号是否被占用"
+    checkPhone(input: CheckPhoneInput!): CheckPhonePayload!
+    "检查用户名是否被占用"
+    checkUsername(input: CheckUsernameInput!): CheckUsernamePayload!
+    "◆ 删除帖子"
+    deletePost(input: DeletePostInput!): DeletePostPayload!
+    "◆ 删除回复"
+    deleteReply(input: DeleteReplyInput!): DeleteReplyPayload!
+    "◆ 收藏"
+    favoritePost(input: FavoritePostInput!): FavoritePostPayload!
+    "◆ 关注/取关用户"
+    followUser(input: FollowUserInput!): FollowUserPayload
+    "◆◆ 获取app上传凭证"
+    getMobileAppUploadToken(input: GetMobileAppUploadTokenInput!): GetMobileAppUploadTokenPayload!
+    "◆ 获取图片上传凭证"
+    getUploadToken(input: GetUploadTokenInput!): GetUploadTokenPayload!
+    "◆ 点赞"
+    likePost(input: LikePostInput!): LikePostPayload!
+    "◆ 点赞"
+    likeReply(input: LikeReplyInput!): LikeReplyPayload!
+    "登录"
+    login(input: LoginInput!): LoginPayload!
+    "◆◆ 新建举报"
+    processReport(input: ProcessReportInput!): ProcessReportPayload
+    "◆ 修改消息为已读"
+    readMessage(input: ReadMessageInput!): ReadMessagePayload!
+    "◆ 修改某类型/所有类型的所有消息为已读"
+    readMessages(input: ReadMessagesInput): ReadMessagesPayload!
+    "◆ 记录帖子已读"
+    readPost(input: ReadPostInput!): ReadPostPayload!
+    "注册"
+    register(input: RegisterInput!): RegisterPayload!
+    "发送邮箱验证码"
+    sendEmailCode(input: SendEmailCodeInput!): SendCodePayload!
+    "◆ 发送手机验证码"
+    sendPhoneCode(input: SendPhoneCodeInput!): SendCodePayload!
+    "◆ 绑定手机号"
+    setPhone(input: SetPhoneInput!): SetPhonePayload!
+    "◆◆ 根据version_code更新安卓app信息"
+    updateMobileAppInfo(input: UpdateMobileAppInfoInput!): UpdateMobileAppInfoPayload!
+    "◆ 更新帖子"
+    updatePost(input: UpdatePostInput!): UpdatePostPayload!
+    "◆ 更新回复"
+    updateReply(input: UpdateReplyInput!): UpdateReplyPayload!
+    "◆ 更新用户信息"
+    updateUser(input: UpdateUserInput!): UpdateUserPayload
+}
+
+type PageInfo {
+    end_time: DateTime!
+    has_next_page: Boolean!
+    start_time: DateTime!
+}
+
+"帖子信息"
+type Post {
+    "作者"
+    author: User!
+    "分类"
+    category: [Category!]!
+    "正文"
+    content: String!
+    "摘要"
+    digest: String!
+    "是否已收藏 未登录返回false"
+    favorite: Boolean!
+    "热门回复"
+    hot_reply(limit: Int! = 5, skip: Int! = 0): [Reply!]!
+    "热度"
+    hot_value: Int!
+    "帖子ID"
+    id: ID!
+    "图片"
+    images: [String!]!
+    "点赞数"
+    like_count: Int!
+    "是否已赞 未登录返回false"
+    liked: Boolean!
+    "阅读量"
+    read_count: Int!
+    "回复"
+    reply(limit: Int! = 100, sort: Int! = 1, time: DateTime! = 0): [Reply!]!
+    "回复数(含一级和二级回复)"
+    reply_count: Int!
+    "最后回复时间"
+    reply_time: DateTime!
+    "发帖时间"
+    time: DateTime!
+    "标题"
+    title: String!
+    "话题"
+    topic: Topic!
+    "最后更新时间"
+    update_time: DateTime!
+}
+
+type PostConnection {
+    nodes: [Post!]!
+    pageInfo: PageInfo!
+}
+
+type ProcessReportPayload {
+    success: Boolean!
+}
+
+"""
+
+- ◆: 需要用户权限 且只能查/改自己的 未登录返回错误
+- 目前只有注册登录少部分接口允许未登录调用
+"""
+type Query {
+    "◆ 查询所有帖子分类"
+    categories: [Category!]!
+    "◆ 按ID查询帖子分类信息"
+    category(id: ID!): Category!
+    "◆ 当前登录用户信息"
+    currentUser: User!
+    "◆ 关注用户的帖子"
+    followingPosts(limit: Int! = 10, time: DateTime! = 2145888000): PostConnection!
+    "◆ 获取热门帖子列表(前20)"
+    hotPosts: [Post!]!
+    "◆ 按帖子查询热门回复"
+    hot_reply(limit: Int! = 5, post: ID!, skip: Int! = 0): [Reply!]!
+    "◆ 按ID查询消息"
+    message(id: ID!): Message!
+    "◆ 消息列表"
+    messages(limit: Int! = 10, read: Boolean, skip: Int! = 0, type: MessageType): [Message!]!
+    "获取安卓app信息 默认或指定版本不存在时查询最新版本"
+    mobileAppInfo(version_code: Int): MobileAppInfo!
+    "◆◆ 获取所有安卓app信息"
+    mobileAppInfos(limit: Int! = 10, skip: Int! = 0): [MobileAppInfo!]
+    "◆ 按ID查询帖子信息"
+    post(id: ID!): Post!
+    "◆ 查询帖子列表"
+    posts(category: ID! = "", limit: Int! = 10, time: DateTime! = 2145888000, topic: ID! = ""): PostConnection!
+    "◆ 按帖子查询回复信息"
+    replies(limit: Int! = 100, post: ID!, sort: Int! = 1, time: DateTime! = 0): [Reply!]!
+    "◆ 按ID查询回复信息"
+    reply(id: ID!): Reply!
+    "◆◆ 查询举报"
+    report(id: ID!): Report
+    "◆ 查询所有举报原因"
+    reportReasons: [ReportReason!]!
+    "◆◆ 查询所有举报"
+    reports(limit: Int! = 10, time: DateTime! = 2145888000): [Report!]!
+    "搜索用户/帖子"
+    search(key: String!, limit: Int = 10, skip: Int = 0, type: SearchType!): [SearchResult!]!
+    "◆◆ 查询数据"
+    statistic(begin_time: DateTime! = 0, end_time: DateTime! = 2145888000): Statistic!
+    "◆ 按ID查询话题信息"
+    topic(id: ID!): Topic!
+    "◆ 查询所有话题"
+    topics: [Topic!]!
+    "◆ 未读消息数"
+    unreadMessageCount(type: MessageType): MessageCount!
+    "◆ 按ID查询用户信息"
+    user(id: ID!): User!
+}
+
+type ReadMessagePayload {
+    success: Boolean!
+}
+
+type ReadMessagesPayload {
+    success: Boolean!
+}
+
+type ReadPostPayload {
+    success: Boolean!
+}
+
+type RegisterPayload {
+    id: ID!
+}
+
+"回复信息"
+type Reply {
+    "作者"
+    author: User!
+    "回复文本"
+    content: String!
+    "回复ID"
+    id: ID!
+    "点赞数"
+    like_count: Int!
+    "是否已赞 未登录返回false"
+    liked: Boolean!
+    "父回复   (二级回复特有 一级回复为null)"
+    parent_reply: Reply
+    "帖子"
+    post: Post
+    "回复对象 (二级回复特有 一级回复为null)"
+    reply_at: Reply
+    "子回复   (一级回复特有 二级回复为null)"
+    sub_reply(limit: Int! = 100, sort: Int! = 1, time: DateTime! = 0): [Reply!]
+    "回复时间"
+    time: DateTime!
+    "更新时间"
+    update_time: DateTime!
+}
+
+type ReplyConnection {
+    nodes: [Reply!]!
+    pageInfo: PageInfo!
+}
+
+"举报信息"
+type Report {
+    "具体说明"
+    desc: String!
+    "举报ID"
+    id: ID!
+    "是否已处理"
+    processed: Boolean!
+    "举报原因"
+    reason: ID!
+    "处理结果"
+    result: Int!
+    "处理结果说明"
+    result_desc: String!
+    "对象ID"
+    target: ID!
+    "举报时间"
+    time: DateTime!
+    "对象类型"
+    type: ReportType!
+    "发起举报的用户"
+    user: User!
+}
+
+"举报原因"
+type ReportReason {
+    "举报原因描述"
+    desc: String!
+    "举报原因ID"
+    id: ID!
+}
+
+type SendCodePayload {
+    success: Boolean!
+}
+
+type SetPhonePayload {
+    success: Boolean!
+}
+
+type Statistic {
+    post_count: Int!
+    reply_count: Int!
+    user_count: Int!
+}
+
+"话题信息"
+type Topic {
+    "话题描述"
+    desc: String!
+    "话题ID"
+    id: ID!
+    "话题的帖子"
+    posts(limit: Int! = 10, time: DateTime! = 2145888000): PostConnection!
+    "话题标题"
+    title: String!
+}
+
+type UpdateMobileAppInfoPayload {
+    success: Boolean!
+}
+
+type UpdatePostPayload {
+    success: Boolean!
+}
+
+type UpdateReplyPayload {
+    success: Boolean!
+}
+
+type UpdateUserPayload {
+    success: Boolean!
+}
+
+"用户信息"
+type User {
+    "◆ 账号信息"
+    account_info: Account!
+    "头像URL"
+    avatar: String!
+    "注册时间"
+    create_time: DateTime!
+    "收藏的帖子"
+    favorite_posts(limit: Int! = 10, time: DateTime! = 2145888000): PostConnection!
+    "关注他的用户"
+    followed_users(limit: Int! = 15, skip: Int! = 0): [User!]!
+    "关注的用户"
+    following_users(limit: Int! = 15, skip: Int! = 0): [User!]!
+    "用户ID"
+    id: ID!
+    "是否已关注 未登录/自己返回false"
+    is_following: Boolean!
+    "赞过的帖子"
+    liked_posts(limit: Int! = 10, time: DateTime! = 2145888000): PostConnection!
+    "发过的贴子"
+    posts(limit: Int! = 10, time: DateTime! = 2145888000): PostConnection!
+    "发过的回复"
+    replies(limit: Int! = 10, time: DateTime! = 2145888000): ReplyConnection!
+    "用户数据"
+    user_count: UserCount!
+    "用户名"
+    username: String!
+}
+
+"用户数据"
+type UserCount {
+    "粉丝数"
+    followed_count: Int!
+    "关注数"
+    following_count: Int!
+    "被点赞"
+    liked_count: Int!
+    "帖子数"
+    post_count: Int!
+    "被评论"
+    replied_count: Int!
+}
+
+enum MessageType {
+    AT
+    COMMENT
+    FEEDBACK
+    FOLLOW
+    LIKE
+    LIKE_REPLY
+    OFFICIAL
+    REPLY
+    REPORT
+}
+
+"举报对象类型"
+enum ReportType {
+    POST
+    REPLY
+    USER
+}
+
+enum SearchType {
+    POST
+    USER
+}
+
+enum UploadType {
+    AVATAR
+    POST
+}
+
+scalar DateTime
+
+input AddMobileAppInfoInput {
+    dex: String!
+    sign: String!
+    update_log: String!
+    url: String!
+    version: String!
+    version_code: Int!
+}
+
+input AddPostInput {
+    category: [ID]
+    content: String!
+    digest: String!
+    title: String!
+    topic: ID
+}
+
+input AddReplyInput {
+    content: String!
+    post: ID!
+    "二级回复的回复对象 一级回复忽略即可"
+    reply_at: ID
+}
+
+input AddReportInput {
+    desc: String!
+    reason: ID!
+    target: ID!
+    type: ReportType!
+}
+
+input ChangePasswordInput {
+    email_verify_code: String!
+    is_alumni: Boolean!
+    new_password: String!
+    person_id: String!
+}
+
+input CheckPersonIDInput {
+    person_id: String!
+}
+
+input CheckPhoneInput {
+    phone: String!
+}
+
+input CheckUsernameInput {
+    username: String!
+}
+
+input DeletePostInput {
+    id: ID!
+}
+
+input DeleteReplyInput {
+    id: ID!
+}
+
+input FavoritePostInput {
+    favorite: Boolean!
+    id: ID!
+}
+
+input FollowUserInput {
+    follow: Boolean!
+    id: ID!
+}
+
+input GetMobileAppUploadTokenInput {
+    "文件名"
+    filename: String!
+}
+
+input GetUploadTokenInput {
+    type: UploadType!
+}
+
+input LikePostInput {
+    id: ID!
+    like: Boolean!
+}
+
+input LikeReplyInput {
+    id: ID!
+    like: Boolean!
+}
+
+input LoginInput {
+    password: String!
+    person_id: String!
+}
+
+input ProcessReportInput {
+    id: ID!
+    result: Int!
+    result_desc: String! = ""
+}
+
+input ReadMessageInput {
+    id: ID!
+}
+
+input ReadMessagesInput {
+    type: MessageType
+}
+
+input ReadPostInput {
+    id: ID!
+}
+
+input RegisterInput {
+    email_verify_code: String!
+    is_alumni: Boolean!
+    password: String!
+    person_id: String!
+    username: String!
+}
+
+input SendEmailCodeInput {
+    is_alumni: Boolean!
+    person_id: String!
+}
+
+input SendPhoneCodeInput {
+    phone: String!
+}
+
+input SetPhoneInput {
+    phone: String!
+    phone_verify_code: String!
+}
+
+input UpdateMobileAppInfoInput {
+    dex: String! = ""
+    sign: String! = ""
+    update_log: String! = ""
+    url: String! = ""
+    version: String! = ""
+    version_code: Int!
+}
+
+input UpdatePostInput {
+    content: String
+    digest: String
+    id: ID!
+    title: String
+}
+
+input UpdateReplyInput {
+    content: String!
+    id: ID!
+}
+
+input UpdateUserInput {
+    avatar: String
+    username: String
+}

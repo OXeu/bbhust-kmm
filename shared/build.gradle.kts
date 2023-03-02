@@ -2,10 +2,18 @@ plugins {
     kotlin("multiplatform")
     kotlin("native.cocoapods")
     id("com.android.library")
+    id("com.apollographql.apollo3").version("3.7.3")
 }
 
+apollo {
+    service("service") {
+        packageName.set("com.bingyan")
+    }
+}
 kotlin {
+
     android {
+
         compilations.all {
             kotlinOptions {
                 jvmTarget = "1.8"
@@ -26,11 +34,13 @@ kotlin {
             baseName = "shared"
         }
     }
+
     
     sourceSets {
         val commonMain by getting {
             dependencies {
                 implementation("life.xeu:markdown:1.0.4")
+                implementation("com.apollographql.apollo3:apollo-runtime:3.7.3")
             }
         }
         val commonTest by getting {
@@ -69,3 +79,4 @@ android {
         targetSdk = 33
     }
 }
+
