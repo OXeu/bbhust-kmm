@@ -2,7 +2,6 @@ import SwiftUI
 import shared
 
 struct MarkdownView: View {
-	let greet = Greeting().greet()
     let ast = MarkdownAST().parse(markdown: MarkdownAST().exampleText).makeLines()
 
 	var body: some View {

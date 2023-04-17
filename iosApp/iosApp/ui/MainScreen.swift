@@ -7,8 +7,10 @@
 //
 
 import SwiftUI
+import shared
 
 struct MainScreen: View {
+    let store = LoginReduxKt.store
     var body: some View {
         Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
     }
